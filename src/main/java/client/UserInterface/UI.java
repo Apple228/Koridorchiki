@@ -1,4 +1,4 @@
-package client_data.UI;
+package client.UserInterface;
 
 import rmi.Server;
 import java.awt.BorderLayout;
@@ -16,7 +16,7 @@ import javax.swing.JFrame;
         public UI(int clientID) {
             super("Коридорчики " + clientID);
 
-            int gridSize = grid.DELTA * (Server.gridSize - 1);
+            int gridSize = grid.DELTA * (Server.fieldSize - 1);
             GAME_FIELD_SIZE_X = gridSize + 2 * OFFSET;
             GAME_FIELD_SIZE_Y = gridSize + 3 * OFFSET;
 

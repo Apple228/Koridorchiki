@@ -1,10 +1,10 @@
-package client_data;
+package client;
 
-import client_data.UI.UIState;
-import client_data.UI.UI;
-import client_data.UI.UILine;
-import client_data.UI.UIPoint;
-import server_data.Point;
+import client.UserInterface.UIState;
+import client.UserInterface.UI;
+import client.UserInterface.UILine;
+import client.UserInterface.UIPoint;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import rmi.Corridors;
@@ -95,12 +95,5 @@ public class PointListener implements MouseListener{
         a = null;
         b = null;
     } 
-    
-    public void setStub(Corridors _stub) {
-        stub = _stub;
-    } 
-    
-    public void setClientID(int _clientID) {
-        clientID = _clientID;
-    } 
+
 }

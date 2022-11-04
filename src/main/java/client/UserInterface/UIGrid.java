@@ -1,5 +1,5 @@
 
-package client_data.UI;
+package client.UserInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,8 @@ import javax.swing.JComponent;
 
 public class UIGrid extends JComponent {    
     public static int GRID_SIZE; 
-    public static final int DELTA = 100;
-    private static final int DIM = Server.gridSize;
+    public static final int DELTA = 50;
+    private static final int DIM = Server.fieldSize;
     private List<List<UIPoint>> points;
     
     public UIGrid(int gridSize) {

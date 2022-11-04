@@ -1,7 +1,7 @@
 package rmi;
 
-import server_data.Grid;
-import server_data.Point;
+import server.Grid;
+import server.Point;
 
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -12,22 +12,24 @@ import java.util.List;
 import java.util.Vector;
 
 
-public class Server implements Corridors {
-    public static int gridSize = 5;
-    private static int maxClientsCount = 20;
-    
+public class Server implements Corridors
+{
     private int clientsCount;
-    private Boolean[] clientsStepAllowed;
-    private Integer[] clientsScore;
+    private final Boolean[] clientsStepAllowed;
+    private final Integer[] clientsScore;
+
+    public static int fieldSize = 5;
+    private static final int maxClientsCount = 2;
     
-    private Point[] lastStepA;
-    private Point[] lastStepB;
+    private final Point[] lastStepA;
+    private final Point[] lastStepB;
     
-    private List<Grid> grids;
+    private final List<Grid> grids;
     
     
     
-    public Server() {
+    public Server()
+    {
         clientsCount = 0;
         
         clientsStepAllowed = new Boolean[maxClientsCount];
@@ -39,7 +41,7 @@ public class Server implements Corridors {
          
         grids = new ArrayList<Grid>();
         for (int i = 0; i <  maxClientsCount/2; ++i)
-            grids.add(new Grid(gridSize));
+            grids.add(new Grid(fieldSize));
         
         lastStepA = new Point[maxClientsCount/2];
         lastStepB = new Point[maxClientsCount/2];
@@ -50,39 +52,45 @@ public class Server implements Corridors {
         }
     }
    
-    public int getClientID() {
+    public int getClientID()
+    {
         if (clientsCount < maxClientsCount) {
             int clientID = clientsCount;
             clientsCount++;
-            System.out.println("Register client " + clientID);
-            System.out.println("Clients count " + clientsCount);
+            System.out.println("Подключен новый клиент " + clientID);
+            System.out.println("Всего игроков " + clientsCount);
             return clientID;
         }
         else {
-            System.err.println("Too many clients. Please try again later.");
+            System.err.println("Сервер переполнен, попробуйте позже");
             return -1;
         }    
     }
     
-    public int getOpponentID(int clientID) {
-        if (clientsCount % 2 == 0) {
+    public int getOpponentID(int clientID)
+    {
+        if (clientsCount % 2 == 0)
+        {
             int opponent = (clientID % 2 == 0) ? clientID + 1: clientID - 1;
-            System.out.println("Client " + clientID + " get opponent " + opponent);
+            System.out.println("Игрок " + clientID + "вступает в сражение с игроком" + opponent);
             return opponent;
         }
         else return -1;
     }
         
-    public void start(int clientID) {
+    public void start(int clientID)
+    {
         setStepAllow(clientID);
         System.out.println("Client " + clientID + " start");
     }
         
-    public boolean isStepAllowed(int clientID) {
+    public boolean isStepAllowed(int clientID)
+    {
       return clientsStepAllowed[clientID];
     }
         
-    public boolean isLineAllowed(int clientID, int x1, int y1, int x2, int y2) {
+    public boolean isLineAllowed(int clientID, int x1, int y1, int x2, int y2)
+    {
         if (x1 == x2 && y1 == y2)
             return false;
         int gridID = getGridID(clientID);
@@ -91,7 +99,8 @@ public class Server implements Corridors {
         return a.isAdjacent(b) && !a.isConnected(b);
     }
     
-    public void addLine(int clientID, int x1, int y1, int x2, int y2) {
+    public void addLine(int clientID, int x1, int y1, int x2, int y2)
+    {
         int gridID = getGridID(clientID);     
         Point a = grids.get(gridID).getPoints().get(x1).get(y1); 
         Point b = grids.get(gridID).getPoints().get(x2).get(y2);  
@@ -112,7 +121,8 @@ public class Server implements Corridors {
         changeStepAllow(opponentID);
     }
     
-    public Vector<Point> getOpponentStep(int clientID) {
+    public Vector<Point> getOpponentStep(int clientID)
+    {
         int gridID = getGridID(clientID);   
         Point a = lastStepA[gridID];
         Point b = lastStepB[gridID];
@@ -124,11 +134,13 @@ public class Server implements Corridors {
         return v;
     }
     
-    public void changeStepAllow(int clientID) {
+    public void changeStepAllow(int clientID)
+    {
         clientsStepAllowed[clientID] = clientsStepAllowed[clientID] ? Boolean.FALSE : Boolean.TRUE;
     }
     
-    public int getScore(int clientID) {
+    public int getScore(int clientID)
+    {
         return clientsScore[clientID];
     }
        
@@ -147,15 +159,15 @@ public class Server implements Corridors {
     }
     
     // Запуск и регистрация в сервисе имен сервера 
-    public static void main(String[] args) {
-        String host = "localhost";
+    public static void main(String[] args)
+    {
         int port = 8080;
         try {
             // Создание экземпляра своего класса
             Server obj = new Server();
             // Преобразование локальной сссылки к удаленной
             Corridors stub = (Corridors) UnicastRemoteObject.exportObject(obj, 0);
-
+            System.out.println(stub);
             // Получаем ссылку на сервис имен и кладем в него наш server
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind("server", stub);

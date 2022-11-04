@@ -1,4 +1,4 @@
-package client_data.UI;
+package client.UserInterface;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;

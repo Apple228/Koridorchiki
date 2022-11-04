@@ -1,4 +1,4 @@
-package server_data;
+package server;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,13 +6,13 @@ import java.util.List;
 
 
 public class Grid implements Serializable {
-    private int gridSize;   
+    private final int gridSize;
     private List<List<Point>> points;
     private int numLine = 0;
-    private int maxNumLine;
+    private final int maxNumLine;
         
-    public Grid(int _gridSize) {
-        gridSize = _gridSize;
+    public Grid(int fieldSize) {
+        gridSize = fieldSize;
         maxNumLine = 2 * gridSize * (gridSize - 1);
         pointsInit();
         adjacentPointsInit();

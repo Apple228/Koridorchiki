@@ -1,8 +1,7 @@
-package client_data.UI;
+package client.UserInterface;
 
-import client_data.PointListener;
+import client.PointListener;
 import java.awt.Graphics;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
