@@ -1,0 +1,5 @@
+Правила игры: https://www.pravilaigr.ru/koridorchiki.php
+
+Запуск rmiregistry в новом окне (из коренвой папки src): start C:\...\rmiregistry.exe
+Запуск сервера: Server
+Запуск клиентов сразу 2х: Сlient
