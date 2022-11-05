@@ -14,6 +14,5 @@ public interface Corridors extends Remote
     boolean isLineAllowed(int clientID, int x1, int y1, int x2, int y2) throws RemoteException;
     void addLine(int clientID, int x1, int y1, int x2, int y2) throws RemoteException;
     Vector<Point> getOpponentStep(int clientID) throws RemoteException;
-    int getScore(int clientID) throws RemoteException;
     boolean isFinished(int clientID) throws RemoteException;
 }

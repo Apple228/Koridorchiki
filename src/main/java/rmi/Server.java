@@ -16,10 +16,10 @@ public class Server implements Corridors
 {
     private int clientsCount;
     private final Boolean[] clientsStepAllowed;
-    private final Integer[] clientsScore;
+
 
     public static int fieldSize = 2;
-    private static final int maxClientsCount = 20;
+
     
     private final Point[] lastStepA;
     private final Point[] lastStepB;
@@ -32,29 +32,28 @@ public class Server implements Corridors
     {
         clientsCount = 0;
         
-        clientsStepAllowed = new Boolean[maxClientsCount];
-        clientsScore = new Integer[maxClientsCount];
-        for (int i = 0; i < maxClientsCount; ++i) {
-            clientsStepAllowed[i] = Boolean.FALSE;
-            clientsScore[i] = 0;
-        }
+        clientsStepAllowed = new Boolean[2];
+
+        clientsStepAllowed[0] = Boolean.FALSE;
+
          
         grids = new ArrayList<Grid>();
-        for (int i = 0; i <  maxClientsCount/2; ++i)
-            grids.add(new Grid(fieldSize));
+
+
+        grids.add(new Grid(fieldSize));
         
-        lastStepA = new Point[maxClientsCount/2];
-        lastStepB = new Point[maxClientsCount/2];
+        lastStepA = new Point[1];
+        lastStepB = new Point[1];
         Point p = new Point(-10, -10);
-        for (int i = 0; i <  maxClientsCount/2; ++i) {
-            lastStepA[i] = p;
-            lastStepB[i] = p;
-        }
+
+        lastStepA[0] = p;
+        lastStepB[0] = p;
+
     }
    
     public int getClientID()
     {
-        if (clientsCount < maxClientsCount) {
+        if (clientsCount < 2) {
             int clientID = clientsCount;
             clientsCount++;
             System.out.println("Подключен новый клиент " + clientID);
@@ -106,9 +105,9 @@ public class Server implements Corridors
         if (x1 == x2 && y1 == y2)
             return false;
         int gridID = getGridID(clientID);
-        Point a = grids.get(gridID).getPoints().get(x1).get(y1); 
-        Point b = grids.get(gridID).getPoints().get(x2).get(y2);
-        if (a.isBeside(b) && !a.isConnected(b))
+        Point startP = grids.get(gridID).getPoints().get(x1).get(y1);
+        Point lastP = grids.get(gridID).getPoints().get(x2).get(y2);
+        if (startP.isBeside(lastP) && !startP.isConnected(lastP))
         {
             return true;
         }
@@ -169,11 +168,6 @@ public class Server implements Corridors
 
     }
 
-
-    public int getScore(int clientID)
-    {
-        return clientsScore[clientID];
-    }
        
     public boolean isFinished(int clientID) {
         return grids.get(getGridID(clientID)).isFinished();
@@ -198,8 +192,7 @@ public class Server implements Corridors
         }
 
     }
-    
-    // Запуск и регистрация в сервисе имен сервера 
+
     public static void main(String[] args)
     {
         int port = 8080;

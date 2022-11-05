@@ -7,8 +7,7 @@ import client.UserInterface.CreatePoint;
 import server.Point;
 import java.rmi.RemoteException;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import rmi.Corridors;
 
 
@@ -18,56 +17,67 @@ public class ServerListener {
     
     private static Corridors stub;
     private static int opponentID;
-    private static int clientID;
-    
-    
-    public ServerListener (Corridors _stub, int _clientID,  int _opponentID) {
+
+
+    public ServerListener (Corridors _stub,  int _opponentID) {
         stub = _stub;
-        clientID = _clientID;
         opponentID = _opponentID;
     }
-    
-    public void printLine(Vector<Point> v) {
-        CreatePoint a = CreateWindow.grid.getPoints_list().get(v.get(0).y).get(v.get(0).x);
-        CreatePoint b = CreateWindow.grid.getPoints_list().get(v.get(1).y).get(v.get(1).x);
+
+
+
+    public void printLine(Vector<Point> v)
+    {
+        CreatePoint a = null;
+        CreatePoint b = null;
+        for(int i = 0; i < 2; i++)
+        {
+            if(i == 0)
+            {
+                a = CreateWindow.grid.getPoints_list().get(v.get(i).y).get(v.get(i).x);
+            }
+            else
+            {
+                b = CreateWindow.grid.getPoints_list().get(v.get(i).y).get(v.get(i).x);
+            }
+        }
+
         CreateLine connectionLine = a.getConnection(b);
-        
-        if(connectionLine.getState() == CreateState.UNUSED_LINE) {
-            connectionLine.setState(CreateState.ACTIVE_SECOND_PLAYER);
-            a.setState(CreateState.ACTIVE_SECOND_PLAYER);
-            b.setState(CreateState.ACTIVE_SECOND_PLAYER);
+
+        if(CreateState.UNUSED_LINE == connectionLine.getState())
+        {
+            connectionLine.setState(CreateState.PLAYER2);
+            a.setState(CreateState.PLAYER2);
+            b.setState(CreateState.PLAYER2);
         }
     }
     
-
-    
-    public Thread StartServerListener() {
+    public Thread StartServerListener()
+    {
         return new Thread(() -> {
             try {
-                Vector<Point> v;  
+                Vector<Point> vector;
                 
                 while (!stub.isFinished(opponentID)) {
-                    v = stub.getOpponentStep(opponentID);
-                    if (v.get(0).x != -10) {
+                    vector = stub.getOpponentStep(opponentID);
+                    if (vector.get(0).x != -10) {
                         synchronized(mutex) {
-                            printLine(v);
+                            printLine(vector);
                         }
-                        int clientScore  = stub.getScore(clientID);
-                        int opponentScore  = stub.getScore(opponentID);
+
 
                     }
                 }
                 
-                v = stub.getOpponentStep(opponentID);
+                vector = stub.getOpponentStep(opponentID);
                 synchronized(mutex) {
-                   printLine(v);
+                    printLine(vector);
                 }
-                int clientScore  = stub.getScore(clientID);
-                int opponentScore  = stub.getScore(opponentID);
+
 
             } catch (RemoteException e) {
                 System.err.println("Error! " + e.getMessage());
-                Logger.getLogger(ServerListener.class.getName()).log(Level.SEVERE, null, e);
+
             }
         }
         );

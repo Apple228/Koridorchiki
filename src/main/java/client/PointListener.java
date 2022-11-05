@@ -58,10 +58,10 @@ public class PointListener implements MouseListener
                     int b_y = lastPoint.getIndexY();
 
                     if (stub.isLineAllowed(clientID, a_x, a_y, b_x, b_y)) {
-                        startPoint.setState(CreateState.ACTIVE_FIRST_PLAYER);
-                        lastPoint.setState(CreateState.ACTIVE_FIRST_PLAYER);
+                        startPoint.setState(CreateState.PLAYER1);
+                        lastPoint.setState(CreateState.PLAYER1);
                         CreateLine connectionLine = startPoint.getConnection(lastPoint);
-                        connectionLine.setState(CreateState.ACTIVE_FIRST_PLAYER);
+                        connectionLine.setState(CreateState.PLAYER1);
                         
                         stub.addLine(clientID, a_x, a_y, b_x, b_y);
                         clearLinks();
@@ -81,18 +81,20 @@ public class PointListener implements MouseListener
             e.printStackTrace();
         }  
     }
-    
-    @Override
-    public void mousePressed(MouseEvent mouseEvent) {}
-
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {}
 
     @Override
     public void mouseEntered(MouseEvent mouseEvent) {}
 
     @Override
     public void mouseExited(MouseEvent mouseEvent) {}
+
+    @Override
+    public void mousePressed(MouseEvent mouseEvent) {}
+
+    @Override
+    public void mouseReleased(MouseEvent mouseEvent) {}
+
+
     
 
 

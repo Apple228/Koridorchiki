@@ -36,7 +36,7 @@ public class Client
           
         
         stub.start(clientID);
-        CreateWindow clientGUI = new CreateWindow("Коридорчики ", clientID); // Собираем интерфейс
+        CreateWindow clientGUI = new CreateWindow("Коридорчики ", clientID);
 
 
         PointListener.stub = stub;
@@ -44,7 +44,7 @@ public class Client
         PointListener.gameField = clientGUI;
             
 
-        ServerListener stepListener = new ServerListener(stub, clientID, ID);
+        ServerListener stepListener = new ServerListener(stub,  ID);
         ServerListener.mutex = new Object();
         ServerListener.gameField = clientGUI;
         Thread thread = stepListener.StartServerListener();
@@ -53,7 +53,7 @@ public class Client
         clientGUI.setVisible(true);
 
         thread.join();
-        System.out.println("END");
+
     }
 
 }

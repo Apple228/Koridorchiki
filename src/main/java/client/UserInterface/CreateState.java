@@ -5,8 +5,8 @@ import java.awt.Color;
 import static java.awt.Color.*;
 
 public enum CreateState {
-    ACTIVE_FIRST_PLAYER(green),
-    ACTIVE_SECOND_PLAYER(orange),
+    PLAYER1(green),
+    PLAYER2(orange),
     UNUSED_POINT(gray),
 
     MISSED_POINT(red),
