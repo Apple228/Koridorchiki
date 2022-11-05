@@ -1,9 +1,9 @@
 package client;
 
-import client.UserInterface.UIState;
-import client.UserInterface.UI;
-import client.UserInterface.UILine;
-import client.UserInterface.UIPoint;
+import client.UserInterface.CreateState;
+import client.UserInterface.CreateWindow;
+import client.UserInterface.CreateLine;
+import client.UserInterface.CreatePoint;
 import server.Point;
 import java.rmi.RemoteException;
 import java.util.Vector;
@@ -14,7 +14,7 @@ import rmi.Corridors;
 
 public class ServerListener {
     public static Object mutex;
-    public static UI gameField;
+    public static CreateWindow gameField;
     
     private static Corridors stub;
     private static int opponentID;
@@ -28,22 +28,18 @@ public class ServerListener {
     }
     
     public void printLine(Vector<Point> v) {
-        UIPoint a = gameField.grid.getPoints().get(v.get(0).y).get(v.get(0).x);
-        UIPoint b = gameField.grid.getPoints().get(v.get(1).y).get(v.get(1).x);
-        UILine connectionLine = a.getConnection(b);
+        CreatePoint a = CreateWindow.grid.getPoints_list().get(v.get(0).y).get(v.get(0).x);
+        CreatePoint b = CreateWindow.grid.getPoints_list().get(v.get(1).y).get(v.get(1).x);
+        CreateLine connectionLine = a.getConnection(b);
         
-        if(connectionLine.getState() == UIState.NOT_ACTIVE_LINE) {
-            connectionLine.setState(UIState.ACTIVE_SECOND_PLAYER);
-            a.setState(UIState.ACTIVE_SECOND_PLAYER);
-            b.setState(UIState.ACTIVE_SECOND_PLAYER);
+        if(connectionLine.getState() == CreateState.NOT_ACTIVE_LINE) {
+            connectionLine.setState(CreateState.ACTIVE_SECOND_PLAYER);
+            a.setState(CreateState.ACTIVE_SECOND_PLAYER);
+            b.setState(CreateState.ACTIVE_SECOND_PLAYER);
         }
     }
     
-    public void updateScore(int clientScore, int opponentScore) {
-        gameField.score.clientScore = clientScore; 
-        gameField.score.opponentScore = opponentScore; 
-        gameField.score.repaint();
-    }
+
     
     public Thread StartServerListener() {
         return new Thread(() -> {
@@ -58,9 +54,7 @@ public class ServerListener {
                         }
                         int clientScore  = stub.getScore(clientID);
                         int opponentScore  = stub.getScore(opponentID);
-                        synchronized(mutex) {
-                            updateScore(clientScore, opponentScore);
-                        }
+
                     }
                 }
                 
@@ -70,11 +64,9 @@ public class ServerListener {
                 }
                 int clientScore  = stub.getScore(clientID);
                 int opponentScore  = stub.getScore(opponentID);
-                synchronized(mutex) {
-                    updateScore(clientScore, opponentScore);
-                } 
+
             } catch (RemoteException e) {
-                System.err.println("Prowhisper Error! " + e.getMessage());
+                System.err.println("Error! " + e.getMessage());
                 Logger.getLogger(ServerListener.class.getName()).log(Level.SEVERE, null, e);
             }
         }

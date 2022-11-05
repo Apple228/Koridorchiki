@@ -6,18 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 
-public class UIPoint extends JComponent {
+public class CreatePoint extends JComponent {
     private int x;
     private int y;
     private int indexHor;
     private int indexVert;
     public static int POINT_RADIUS = 6;
     private int radius;
-    private List<UILine> connections;
-    private UIState state = UIState.NOT_ACTIVE_POINT;
+    private List<CreateLine> connections;
+    private CreateState state = CreateState.NOT_ACTIVE_POINT;
     
     
-    public UIPoint(int _x, int _y, int _radius) {
+    public CreatePoint(int _x, int _y, int _radius) {
         super();
         this.x = _x;
         this.y = _y;
@@ -36,7 +36,7 @@ public class UIPoint extends JComponent {
         g.fillRoundRect(0, 0, 2 * radius, 2 * radius, 2 * radius, 2 * radius);
     }
 
-    public void setState(UIState state) {
+    public void setState(CreateState state) {
         this.state = state;
         repaint();
     }
@@ -49,7 +49,7 @@ public class UIPoint extends JComponent {
         return y;
     }
 
-    public UIState getState() {
+    public CreateState getState() {
         return state;
     }
 
@@ -69,7 +69,7 @@ public class UIPoint extends JComponent {
         this.indexVert = indexVert;
     }
     
-    public List<UILine> getConnections() {
+    public List<CreateLine> getConnections() {
         return connections;
     }
     
@@ -77,9 +77,9 @@ public class UIPoint extends JComponent {
         return radius;
     }
     
-    public UILine getConnection(UIPoint p) {
-        for(UILine connectedLine : connections) 
-            if(connectedLine.getA().equals(p) || connectedLine.getB().equals(p)) 
+    public CreateLine getConnection(CreatePoint p) {
+        for(CreateLine connectedLine : connections)
+            if(connectedLine.getStartPoint().equals(p) || connectedLine.getLastPoint().equals(p))
                 return connectedLine;
         return null;
     }

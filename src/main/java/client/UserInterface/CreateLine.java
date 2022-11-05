@@ -6,22 +6,22 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import javax.swing.JComponent;
 
-public class UILine extends JComponent {
+public class CreateLine extends JComponent {
     private int fromX;
     private int fromY;
     private int toX;
     private int toY;
-    private final Stroke stroke = new BasicStroke(6.0f);
-    private UIPoint a;
-    private UIPoint b;
+    private final Stroke stroke = new BasicStroke(10.0f);
+    private final CreatePoint startPoint;
+    private final CreatePoint lastPoint;
 
-    private UIState state = UIState.NOT_ACTIVE_LINE;
+    private CreateState state = CreateState.NOT_ACTIVE_LINE;
 
-    public UILine(UIPoint from, UIPoint to) {
+    public CreateLine(CreatePoint from, CreatePoint to) {
         super();
         init(from.get_X(), from.get_Y(), to.get_X(), to.get_Y());
-        a = from;
-        b = to; 
+        startPoint = from;
+        lastPoint = to;
     }
 
     private void init(int fromX, int fromY, int toX, int toY) {
@@ -48,21 +48,21 @@ public class UILine extends JComponent {
         g2d.drawLine(fromX, fromY, toX, toY);
     }
 
-    public UILine setState(UIState state) {
+    public CreateLine setState(CreateState state) {
         this.state = state;
         repaint();
         return this;
     }
     
-    public UIState getState() {
+    public CreateState getState() {
         return state;
     }
     
-    public UIPoint getA() {
-        return a;
+    public CreatePoint getStartPoint() {
+        return startPoint;
     }
     
-    public UIPoint getB() {
-        return b;
+    public CreatePoint getLastPoint() {
+        return lastPoint;
     }
 }

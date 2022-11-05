@@ -1,29 +1,33 @@
 package client;
 
-import client.UserInterface.UIState;
-import client.UserInterface.UI;
-import client.UserInterface.UILine;
-import client.UserInterface.UIPoint;
+import client.UserInterface.CreateState;
+import client.UserInterface.CreateWindow;
+import client.UserInterface.CreateLine;
+import client.UserInterface.CreatePoint;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import rmi.Corridors;
 
 
-public class PointListener implements MouseListener{
+public class PointListener implements MouseListener
+{
     
     public static final PointListener instance = new PointListener();
-    private UIPoint a;
-    private UIPoint b;
-    private UIPoint lastMissedPoint;
-    private UIState aPrevState;
-    private UIState missedPointPrevState;
-    public static UI gameField;
+    private CreatePoint startPoint;
+    private CreatePoint lastPoint;
+    private CreatePoint lastMissedPoint;
+    private CreateState aPrevState;
+    private CreateState missedPointPrevState;
+    public static CreateWindow gameField;
     public static Corridors stub;
     public static int clientID;
     
     public PointListener() {}
-    
+    private void clearLinks() {
+        startPoint = null;
+        lastPoint = null;
+    }
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         try {
@@ -39,34 +43,33 @@ public class PointListener implements MouseListener{
                 lastMissedPoint = null;
             }
         
-            if(mouseEvent.getSource() instanceof UIPoint) { 
-                UIPoint p = (UIPoint) mouseEvent.getSource();
+            if(mouseEvent.getSource() instanceof CreatePoint p) {
 
-                if(a == null) {
-                    a = p;
-                    aPrevState = a.getState();
-                    a.setState(UIState.CHOOSING_FIRST_PLAYER);
+                if(startPoint == null) {
+                    startPoint = p;
+                    aPrevState = startPoint.getState();
+                    startPoint.setState(CreateState.CHOOSING_FIRST_PLAYER);
                 } else {
-                    b = p;
+                    lastPoint = p;
 
-                    int a_x = a.getIndexHor();
-                    int a_y = a.getIndexVert();
-                    int b_x = b.getIndexHor();
-                    int b_y = b.getIndexVert();
+                    int a_x = startPoint.getIndexHor();
+                    int a_y = startPoint.getIndexVert();
+                    int b_x = lastPoint.getIndexHor();
+                    int b_y = lastPoint.getIndexVert();
 
                     if (stub.isLineAllowed(clientID, a_x, a_y, b_x, b_y)) {
-                        a.setState(UIState.ACTIVE_FIRST_PLAYER);
-                        b.setState(UIState.ACTIVE_FIRST_PLAYER);
-                        UILine connectionLine = a.getConnection(b);
-                        connectionLine.setState(UIState.ACTIVE_FIRST_PLAYER);
+                        startPoint.setState(CreateState.ACTIVE_FIRST_PLAYER);
+                        lastPoint.setState(CreateState.ACTIVE_FIRST_PLAYER);
+                        CreateLine connectionLine = startPoint.getConnection(lastPoint);
+                        connectionLine.setState(CreateState.ACTIVE_FIRST_PLAYER);
                         
                         stub.addLine(clientID, a_x, a_y, b_x, b_y);
                         clearLinks();
                     } else {
                         lastMissedPoint = p;
                         missedPointPrevState = lastMissedPoint.getState();
-                        lastMissedPoint.setState(UIState.MISSED_POINT);
-                        a.setState(aPrevState);
+                        lastMissedPoint.setState(CreateState.MISSED_POINT);
+                        startPoint.setState(aPrevState);
                         clearLinks();
                     }
                 }
@@ -91,9 +94,6 @@ public class PointListener implements MouseListener{
     @Override
     public void mouseExited(MouseEvent mouseEvent) {}
     
-    private void clearLinks() {
-        a = null;
-        b = null;
-    } 
+
 
 }

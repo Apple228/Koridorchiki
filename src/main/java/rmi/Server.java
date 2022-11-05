@@ -18,8 +18,8 @@ public class Server implements Corridors
     private final Boolean[] clientsStepAllowed;
     private final Integer[] clientsScore;
 
-    public static int fieldSize = 5;
-    private static final int maxClientsCount = 2;
+    public static int fieldSize = 2;
+    private static final int maxClientsCount = 20;
     
     private final Point[] lastStepA;
     private final Point[] lastStepB;
@@ -72,7 +72,7 @@ public class Server implements Corridors
         if (clientsCount % 2 == 0)
         {
             int opponent = (clientID % 2 == 0) ? clientID + 1: clientID - 1;
-            System.out.println("Игрок " + clientID + "вступает в сражение с игроком" + opponent);
+            System.out.println("Игрок " + clientID + " подключается в сражение с игроком " + opponent);
             return opponent;
         }
         else return -1;
@@ -81,7 +81,7 @@ public class Server implements Corridors
     public void start(int clientID)
     {
         setStepAllow(clientID);
-        System.out.println("Client " + clientID + " start");
+        System.out.println("Игрок " + clientID + " готов");
     }
         
     public boolean isStepAllowed(int clientID)
@@ -107,9 +107,7 @@ public class Server implements Corridors
         
         a.getConnectedPoints().put(b, clientID);
         b.getConnectedPoints().put(a, clientID);
-        
-        int plusScore = grids.get(gridID).checkSquare(a, b, clientID);
-        clientsScore[clientID] += plusScore;
+
         
         lastStepA[gridID]  = a;
         lastStepB[gridID] = b;
@@ -127,7 +125,7 @@ public class Server implements Corridors
         Point a = lastStepA[gridID];
         Point b = lastStepB[gridID];
         
-        Vector<Point> v = new Vector();
+        Vector<Point> v = new Vector<>();
         v.add(a);
         v.add(b);
 

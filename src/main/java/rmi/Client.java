@@ -2,7 +2,7 @@ package rmi;
 
 import client.PointListener;
 import client.ServerListener;
-import client.UserInterface.UI;
+import client.UserInterface.CreateWindow;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
@@ -34,7 +34,7 @@ public class Client
           
         
         stub.start(clientID);   // Начинаем игру
-        UI clientGUI = new UI(clientID); // Собираем интерфейс
+        CreateWindow clientGUI = new CreateWindow("Коридорчики ", clientID); // Собираем интерфейс
 
         // Настраиваем прослушку точек
         PointListener.stub = stub;
