@@ -129,10 +129,20 @@ public class Server implements Corridors
         lastStepB[gridID] = b;
         
         grids.get(gridID).addNumLine();
-        
-        int opponentID = (clientID % 2 == 0) ? clientID + 1: clientID - 1;
-        changeStepAllow(clientID);
-        changeStepAllow(opponentID);
+        if (clientID % 2 == 0)
+        {
+            int opponentID = clientID + 1;
+            changeStepAllow(clientID);
+            changeStepAllow(opponentID);
+        }
+        else
+        {
+            int opponentID = clientID - 1;
+            changeStepAllow(clientID);
+            changeStepAllow(opponentID);
+        }
+
+
     }
     
     public Vector<Point> getOpponentStep(int clientID)
@@ -145,29 +155,28 @@ public class Server implements Corridors
 
         return v;
     }
-    
-    public boolean changeStepAllow(int clientID)
+
+    public void changeStepAllow(int clientID)
     {
-        if (clientsStepAllowed[clientID] = clientsStepAllowed[clientID])
+        if (clientsStepAllowed[clientID])
         {
-            return false;
+            clientsStepAllowed[clientID] = Boolean.FALSE;
         }
         else
         {
-            return true;
+            clientsStepAllowed[clientID] = Boolean.TRUE;
         }
 
-
     }
-    
+
+
     public int getScore(int clientID)
     {
         return clientsScore[clientID];
     }
        
     public boolean isFinished(int clientID) {
-        int gridID = getGridID(clientID);
-        return grids.get(gridID).isFinished();
+        return grids.get(getGridID(clientID)).isFinished();
     }
     
     private int getGridID(int clientID)
@@ -177,9 +186,17 @@ public class Server implements Corridors
         return gridID;
     }
     
-    private void setStepAllow(int clientID) {
-        clientsStepAllowed[clientID] = 
-                (clientID % 2 == 0) ? Boolean.TRUE : Boolean.FALSE;
+    private void setStepAllow(int clientID)
+    {
+        if(clientID % 2 == 0)
+        {
+            clientsStepAllowed[clientID] =Boolean.TRUE;
+        }
+        else
+        {
+            clientsStepAllowed[clientID] =Boolean.FALSE;
+        }
+
     }
     
     // Запуск и регистрация в сервисе имен сервера 
