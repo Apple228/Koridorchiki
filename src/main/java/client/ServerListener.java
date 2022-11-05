@@ -60,7 +60,8 @@ public class ServerListener {
                 
                 while (!stub.isFinished(opponentID)) {
                     vector = stub.getOpponentStep(opponentID);
-                    if (vector.get(0).x != -10) {
+                    if (vector.get(0).x != -10)
+                    {
                         synchronized(mutex) {
                             printLine(vector);
                         }

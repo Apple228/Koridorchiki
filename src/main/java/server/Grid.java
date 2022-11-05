@@ -9,7 +9,7 @@ public class Grid implements Serializable {
     private final List<List<Point>> points;
     private int numLine = 0;
     private final int maxNumLine;
-        
+
     public Grid(int fieldSize) {
         maxNumLine = 2 * fieldSize * (fieldSize - 1);
         points = new ArrayList<>();

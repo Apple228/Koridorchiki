@@ -7,6 +7,8 @@ import client.UserInterface.CreatePoint;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.rmi.RemoteException;
+
 import rmi.Corridors;
 
 
@@ -15,7 +17,6 @@ public class PointListener implements MouseListener
     
     public static final PointListener instance = new PointListener();
     private CreatePoint startPoint;
-    private CreatePoint lastPoint;
     private CreatePoint lastMissedPoint;
     private CreateState aPrevState;
     private CreateState missedPointPrevState;
@@ -24,25 +25,31 @@ public class PointListener implements MouseListener
     public static int clientID;
     
     public PointListener() {}
-    private void clearLinks() {
-        startPoint = null;
-        lastPoint = null;
+
+    public boolean checkStopRun(Corridors stub) throws RemoteException {
+        if (stub.isFinished(clientID) || !stub.isStepAllowed(clientID))
+        {
+            return true;
+        }
+
+        return false;
     }
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         try {
-            if (!stub.isStepAllowed(clientID)) return;
-            
-            if (stub.isFinished(clientID)) {
-                 System.out.println("End game");
-                 return;
+
+            if (checkStopRun(stub))
+            {
+                return;
             }
             
+
             if(lastMissedPoint != null) {
                 lastMissedPoint.setState(missedPointPrevState);
                 lastMissedPoint = null;
             }
-        
+
+            CreatePoint lastPoint;
             if(mouseEvent.getSource() instanceof CreatePoint p) {
 
                 if(startPoint == null) {
@@ -52,33 +59,45 @@ public class PointListener implements MouseListener
                 } else {
                     lastPoint = p;
 
-                    int a_x = startPoint.getIndexX();
-                    int a_y = startPoint.getIndexY();
-                    int b_x = lastPoint.getIndexX();
-                    int b_y = lastPoint.getIndexY();
 
-                    if (stub.isLineAllowed(clientID, a_x, a_y, b_x, b_y)) {
+
+                    if (stub.isLineAllowed(
+                            clientID, startPoint.getIndexX(), 
+                            startPoint.getIndexY(), 
+                            lastPoint.getIndexX(),  
+                            lastPoint.getIndexY())
+                    ) 
+                    {
                         startPoint.setState(CreateState.PLAYER1);
                         lastPoint.setState(CreateState.PLAYER1);
                         CreateLine connectionLine = startPoint.getConnection(lastPoint);
                         connectionLine.setState(CreateState.PLAYER1);
                         
-                        stub.addLine(clientID, a_x, a_y, b_x, b_y);
-                        clearLinks();
+                        stub.addLine(
+                                clientID,
+                                startPoint.getIndexX(), 
+                                startPoint.getIndexY(), 
+                                lastPoint.getIndexX(),  
+                                lastPoint.getIndexY()
+                        );
+                        startPoint = null;
+                        lastPoint = null;
                     } else {
                         lastMissedPoint = p;
                         missedPointPrevState = lastMissedPoint.getState();
                         lastMissedPoint.setState(CreateState.MISSED_POINT);
                         startPoint.setState(aPrevState);
-                        clearLinks();
+                        startPoint = null;
+                        lastPoint = null;
                     }
                 }
             } else {
-                clearLinks();
+                startPoint = null;
+                lastPoint = null;
             }   
         } catch (Exception e) {
             System.err.println("Point Listener error: " + e.toString());
-            e.printStackTrace();
+
         }  
     }
 
