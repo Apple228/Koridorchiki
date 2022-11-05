@@ -52,10 +52,10 @@ public class PointListener implements MouseListener
                 } else {
                     lastPoint = p;
 
-                    int a_x = startPoint.getIndexHor();
-                    int a_y = startPoint.getIndexVert();
-                    int b_x = lastPoint.getIndexHor();
-                    int b_y = lastPoint.getIndexVert();
+                    int a_x = startPoint.getIndexX();
+                    int a_y = startPoint.getIndexY();
+                    int b_x = lastPoint.getIndexX();
+                    int b_y = lastPoint.getIndexY();
 
                     if (stub.isLineAllowed(clientID, a_x, a_y, b_x, b_y)) {
                         startPoint.setState(CreateState.ACTIVE_FIRST_PLAYER);

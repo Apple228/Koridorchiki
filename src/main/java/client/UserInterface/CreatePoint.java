@@ -6,23 +6,25 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 
-public class CreatePoint extends JComponent {
-    private int x;
-    private int y;
-    private int indexHor;
-    private int indexVert;
-    public static int POINT_RADIUS = 6;
-    private int radius;
-    private List<CreateLine> connections;
-    private CreateState state = CreateState.NOT_ACTIVE_POINT;
+public class CreatePoint extends JComponent
+{
+    private int indexX;
+    private int indexY;
+    private final int x;
+    private final int y;
+
+    private final List<CreateLine> connections;
+    private CreateState state = CreateState.UNUSED_POINT;
     
     
-    public CreatePoint(int _x, int _y, int _radius) {
+    public CreatePoint(int x, int y)
+    {
         super();
-        this.x = _x;
-        this.y = _y;
-        this.radius = _radius;
+        int radius = 6;
         this.connections = new ArrayList<>(4);
+        this.x = x;
+        this.y = y;
+
 
         setLocation(x - radius, y - radius);
         setSize(2 * radius, 2 * radius);
@@ -30,16 +32,31 @@ public class CreatePoint extends JComponent {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g)
+    {
         super.paintComponent(g);
         g.setColor(state.getColor());
-        g.fillRoundRect(0, 0, 2 * radius, 2 * radius, 2 * radius, 2 * radius);
+        g.fillRoundRect(0, 0, 2 * 6, 2 * 6, 2 * 6, 2 * 6);
     }
 
-    public void setState(CreateState state) {
+    public void setState(CreateState state)
+    {
         this.state = state;
         repaint();
     }
+    public int getIndexY() {
+        return indexY;
+    }
+    public int getIndexX() {
+        return indexX;
+    }
+    public void setIndexY(int indexY) {
+        this.indexY = indexY;
+    }
+    public void setIndexX(int indexX) {
+        this.indexX = indexX;
+    }
+
 
     public int get_X() {
         return x;
@@ -53,34 +70,18 @@ public class CreatePoint extends JComponent {
         return state;
     }
 
-    public int getIndexHor() {
-        return indexHor;
-    }
 
-    public void setIndexHor(int indexHor) {
-        this.indexHor = indexHor;
-    }
-
-    public int getIndexVert() {
-        return indexVert;
-    }
-
-    public void setIndexVert(int indexVert) {
-        this.indexVert = indexVert;
-    }
-    
     public List<CreateLine> getConnections() {
         return connections;
     }
     
-    public int getRadius() {
-        return radius;
-    }
+
     
-    public CreateLine getConnection(CreatePoint p) {
-        for(CreateLine connectedLine : connections)
-            if(connectedLine.getStartPoint().equals(p) || connectedLine.getLastPoint().equals(p))
-                return connectedLine;
+    public CreateLine getConnection(CreatePoint point)
+    {
+        for(CreateLine i : connections)
+            if(i.getStartPoint().equals(point) || i.getLastPoint().equals(point))
+                return i;
         return null;
     }
 }

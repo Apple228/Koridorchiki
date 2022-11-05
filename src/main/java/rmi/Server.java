@@ -64,16 +64,28 @@ public class Server implements Corridors
         else {
             System.err.println("Сервер переполнен, попробуйте позже");
             return -1;
-        }    
+        }
+
     }
     
     public int getOpponentID(int clientID)
     {
         if (clientsCount % 2 == 0)
         {
-            int opponent = (clientID % 2 == 0) ? clientID + 1: clientID - 1;
-            System.out.println("Игрок " + clientID + " подключается в сражение с игроком " + opponent);
-            return opponent;
+            if (clientID % 2 == 0)
+            {
+                int opponent = clientID + 1;
+                System.out.println("Игрок " + clientID + " подключается в сражение с игроком " + opponent);
+                return opponent;
+            }
+            else
+            {
+                int opponent = clientID - 1;
+                System.out.println("Игрок " + clientID + " подключается в сражение с игроком " + opponent);
+                return opponent;
+            }
+
+
         }
         else return -1;
     }
@@ -95,8 +107,12 @@ public class Server implements Corridors
             return false;
         int gridID = getGridID(clientID);
         Point a = grids.get(gridID).getPoints().get(x1).get(y1); 
-        Point b = grids.get(gridID).getPoints().get(x2).get(y2); 
-        return a.isAdjacent(b) && !a.isConnected(b);
+        Point b = grids.get(gridID).getPoints().get(x2).get(y2);
+        if (a.isBeside(b) && !a.isConnected(b))
+        {
+            return true;
+        }
+        return false;
     }
     
     public void addLine(int clientID, int x1, int y1, int x2, int y2)
@@ -121,20 +137,27 @@ public class Server implements Corridors
     
     public Vector<Point> getOpponentStep(int clientID)
     {
-        int gridID = getGridID(clientID);   
-        Point a = lastStepA[gridID];
-        Point b = lastStepB[gridID];
+        int gridID = getGridID(clientID);
         
         Vector<Point> v = new Vector<>();
-        v.add(a);
-        v.add(b);
+        v.add(lastStepA[gridID]);
+        v.add(lastStepB[gridID]);
 
         return v;
     }
     
-    public void changeStepAllow(int clientID)
+    public boolean changeStepAllow(int clientID)
     {
-        clientsStepAllowed[clientID] = clientsStepAllowed[clientID] ? Boolean.FALSE : Boolean.TRUE;
+        if (clientsStepAllowed[clientID] = clientsStepAllowed[clientID])
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+
     }
     
     public int getScore(int clientID)
@@ -147,8 +170,11 @@ public class Server implements Corridors
         return grids.get(gridID).isFinished();
     }
     
-    private int getGridID(int clientID) {
-        return clientID - clientID % 2;
+    private int getGridID(int clientID)
+    {
+        int gridID = clientID - clientID % 2;
+
+        return gridID;
     }
     
     private void setStepAllow(int clientID) {

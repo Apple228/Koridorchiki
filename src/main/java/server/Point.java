@@ -1,22 +1,23 @@
 package server;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Point implements Serializable {
-    public int x, y;
-    private static int maxAdjacentPoints = 4;
-    private List<Point> adjacentPoints;
-    private Map<Point, Integer> connectedPoints;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-    public Point(int _x, int _y) {
-        x = _x;
-        y = _y;
-        adjacentPoints = new ArrayList<>(maxAdjacentPoints);
-        connectedPoints = new HashMap<>(maxAdjacentPoints);
+public class Point implements Serializable {
+    public int x;
+    public int y;
+    private final List<Point> adjacentPoints;
+    private final Map<Point, Integer> connectedPoints;
+
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+        adjacentPoints = new ArrayList<>(4);
+        connectedPoints = new HashMap<>(4);
     }
     
     public List<Point> getAdjacentPoints() {
@@ -26,29 +27,30 @@ public class Point implements Serializable {
     public Map<Point, Integer> getConnectedPoints() {
         return connectedPoints;
     }
-    
-    public boolean eq(Point p) {
-        return x == p.x && y == p.y;
+    public boolean isConnected(Point p)
+    {
+        for (Point i : connectedPoints.keySet())
+            if (i.eq(p))
+                return true;
+        return false;
+    }
+    public boolean eq(Point p)
+    {
+        if (x == p.x && y == p.y)
+            return true;
+        else
+            return false;
     }
     
-    public boolean isAdjacent(Point p) {
-        for (Point _p : adjacentPoints)
-            if (_p.eq(p))
+    public boolean isBeside(Point p)
+    {
+        for (Point i : adjacentPoints)
+            if (i.eq(p))
                 return true;
         return false;
     }
     
-    public boolean isConnected(Point p) {
-        for (Point _p : connectedPoints.keySet())
-            if (_p.eq(p))
-                return true;
-        return false;
-    }
+
     
-    public boolean isConnectedStatus(Point p, int clientID) {
-        for (Point _p : connectedPoints.keySet())
-            if (_p.eq(p) && connectedPoints.get(_p) == clientID)
-                return true;
-        return false;
-    }
+
 }

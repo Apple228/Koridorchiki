@@ -7,51 +7,49 @@ import java.awt.Stroke;
 import javax.swing.JComponent;
 
 public class CreateLine extends JComponent {
-    private int fromX;
-    private int fromY;
-    private int toX;
-    private int toY;
-    private final Stroke stroke = new BasicStroke(10.0f);
     private final CreatePoint startPoint;
     private final CreatePoint lastPoint;
 
-    private CreateState state = CreateState.NOT_ACTIVE_LINE;
+    private int toLastX;
+    private int toLastY;
+    private final Stroke stroke = new BasicStroke(10.0f);
 
+
+    private CreateState state = CreateState.UNUSED_LINE;
+    private final int fromStartX;
+    private final int fromStartY;
     public CreateLine(CreatePoint from, CreatePoint to) {
         super();
-        init(from.get_X(), from.get_Y(), to.get_X(), to.get_Y());
+
+        int x0 = Math.min(from.get_X(), to.get_X());
+        int y0 = Math.min(from.get_Y(), to.get_Y());
+
+        setLocation(x0, y0);
+        setSize(Math.max(Math.abs(from.get_X() - to.get_X()), 10), Math.max(Math.abs( from.get_Y() - to.get_Y()), 10));
+
+        this.fromStartX = from.get_X() - x0;
+        this.fromStartY = from.get_Y() - y0;
+
+        this.toLastX = to.get_X() - x0;
+        this.toLastY = to.get_Y() - y0;
         startPoint = from;
         lastPoint = to;
     }
 
-    private void init(int fromX, int fromY, int toX, int toY) {
-        int x0 = Math.min(fromX, toX);
-        int y0 = Math.min(fromY, toY);
-
-        setLocation(x0, y0);
-        setSize(Math.max(Math.abs(toX - fromX), 10), Math.max(Math.abs(toY - fromY), 10));
-
-        this.fromX = fromX - x0;
-        this.fromY = fromY - y0;
-
-        this.toX = toX - x0;
-        this.toY = toY - y0;
-    }
-
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g)
+    {
         super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(state.getColor());
         g2d.setStroke(stroke);
-        g2d.drawLine(fromX, fromY, toX, toY);
+        g2d.drawLine(fromStartX, fromStartY, toLastX, toLastY);
     }
 
-    public CreateLine setState(CreateState state) {
+    public void setState(CreateState state) {
         this.state = state;
         repaint();
-        return this;
     }
     
     public CreateState getState() {

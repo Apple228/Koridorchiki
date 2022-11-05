@@ -32,7 +32,7 @@ public class ServerListener {
         CreatePoint b = CreateWindow.grid.getPoints_list().get(v.get(1).y).get(v.get(1).x);
         CreateLine connectionLine = a.getConnection(b);
         
-        if(connectionLine.getState() == CreateState.NOT_ACTIVE_LINE) {
+        if(connectionLine.getState() == CreateState.UNUSED_LINE) {
             connectionLine.setState(CreateState.ACTIVE_SECOND_PLAYER);
             a.setState(CreateState.ACTIVE_SECOND_PLAYER);
             b.setState(CreateState.ACTIVE_SECOND_PLAYER);

@@ -27,9 +27,9 @@ public class CreateGrid extends JComponent {
             List<CreatePoint> row = new ArrayList<>(fieldSize);
 
             for(int j = 0; j < fieldSize; j++) {
-                CreatePoint uiPoint = new CreatePoint(x, y, CreatePoint.POINT_RADIUS);
-                uiPoint.setIndexVert(i);
-                uiPoint.setIndexHor(j);
+                CreatePoint uiPoint = new CreatePoint(x, y);
+                uiPoint.setIndexY(i);
+                uiPoint.setIndexX(j);
 
                 row.add(uiPoint);
                 add(uiPoint);
